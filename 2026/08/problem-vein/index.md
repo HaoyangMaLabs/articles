@@ -9,7 +9,7 @@ featured: true
 draft: false
 ---
 
-There is a strong belief in our culture that if you're willing to adapt, you'll get a job. If you get a job, you must have done something right. If you don't, you must have done something wrong. You didn't try hard enough. At least, that's the usual explanation.
+We often hear that if you're willing to adapt, you'll get a job. If you get a job, you must have done something right. If you don't, you must have done something wrong. You didn't try hard enough. At least, that's the usual explanation.
 
 We don't usually think this way about things outside our control. No one blames themselves for the rain, or imagines there was a button they failed to press. But when it comes to employment, we often behave as though such a button exists. If you're jobless, there's always something to improve: skills, experience, connections. The checklist is endless. So you can never prove you've tried hard enough.
 
