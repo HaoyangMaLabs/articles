@@ -38,3 +38,5 @@ Not every problem belongs to that vein. There are still many problems we can't s
 When opportunities begin to shrink, the relevant question changes: how much value is left in this mine?
 
 Or perhaps the better question is: under current conditions, how much value can humans actually extract from this mine? Once the vein itself is overlooked, everything starts to look like a problem with the miners.
+
+So, it’s time to find a new vein.
