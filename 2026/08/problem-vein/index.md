@@ -40,3 +40,5 @@ When opportunities begin to shrink, the relevant question changes: how much valu
 Or perhaps the better question is: under current conditions, how much value can humans actually extract from this mine? Once the vein itself is overlooked, everything starts to look like a problem with the miners.
 
 So, it’s time to find a new vein.
+
+This article is licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). You may share and adapt it, provided that you give appropriate credit to HaoyangMa and link to the original article.
