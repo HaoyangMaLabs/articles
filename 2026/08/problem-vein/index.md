@@ -41,4 +41,4 @@ Or perhaps the better question is: under current conditions, how much value can 
 
 So, it’s time to find a new vein.
 
-This article is licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). You may share and adapt it, provided that you give appropriate credit to HaoyangMa and link to the original article.
+Copyright © 2026 HaoyangMa. All rights reserved. You are welcome to link to this original article. Please do not reproduce, mirror, translate, or adapt it without permission.
