@@ -1,0 +1,267 @@
+As we all know,
+an attention block in a neural network lets us
+combine one word with other related words.
+For example, in "I love machine learning",
+the word "learning" can pay attention to "machine",
+and use that information to understand what kind of learning we mean.
+That is quite simple and powerful.
+
+And this pattern has been around for nearly 10 years.
+So the question today is: can we accelerate it?
+With some kind of mathematical trick?
+
+The answer is Yes.
+
+---
+
+So before that, let's think again: what exactly is an attention block?
+In my opinion, we can just think of this complex mathematical structure as a simple idea: information transmission.
+The job of an attention block is to pass information from one word to the other words that can attend to it.
+And then, for the next word, we do it again.
+
+---
+
+So, based on that assumption, can we just move the information
+with fewer computations?
+A full attention block needs n^2 pairwise comparisons.
+Even causal attention still needs roughly (n^2)/2.
+The computational complexity is still quadratic.
+
+So many of these connections are computed over and over again.
+But my human instinct says: when I read words or sentences, I rarely go back over every word.
+For example, when I read "I love machine learning",
+I read "I love", then "machine learning", and put the two parts together.
+I don't go back and compare "I" with "machine", then "I" with "learning", then every other pair.
+So a bold idea was born.
+Maybe we don't need all those dense connections.
+Maybe we just need to make sure all the information gets connected at least once.
+
+---
+
+So I went and looked into it.
+And yes, all kinds of "sparse attention" already exist.
+Other people's work was already pretty close to what I had in mind.
+And their results support the idea: a lot of those dense connections are redundant.
+
+For example, the Sparse Transformer paper found that a full-attention model had already learned sparse patterns in many layers.
+Their fixed sparse version even scored slightly better: 0.99 bits per byte versus 1.00 for dense attention.
+
+And PowerAttention used about 94 percent sparsity, while perplexity only went from 9.42 to 10.00.
+
+And other studies like these support the same idea.
+
+So the idea that a lot of that computation is redundant is already widely accepted.
+
+But after looking around, I didn't find quite the combination I was looking for:
+spread information quickly, avoid spreading the same information over and over,
+and keep the rules regular enough to turn into efficient GPU kernels.
+
+And that happens to give you a reason to watch this video.
+
+If I were just repeating what's already out there, you could just ask AI.
+No need to watch my video.
+
+So, here's my attempt to fill that gap in sparse attention.
+
+I'll call it Staged Binary-Local Diffusion Attention.
+A bit of a mouthful. But the idea is simple.
+
+---
+
+Here's how it works.
+Instead of connecting every word to every earlier word, I give each layer a simple jumping rule.
+
+In the first layer, each word looks at itself and one position to the left.
+In the second layer, it looks at itself and two positions to the left.
+Then the long jump doubles again: four, eight, sixteen, and so on.
+
+But wait. If I only jump one, two, four, eight... what about three?
+Did I just forget a word?
+
+No. Three is one plus two.
+The information can travel one position in the first layer, then another two in the second.
+Seven? One plus two plus four.
+Every distance can be built from these binary jumps.
+
+And the word at the other end isn't carrying just its own information anymore.
+It's also carrying information it picked up in earlier layers.
+So I don't need to ask every word directly. I can let them pass the information along.
+
+That's the binary part.
+But passing information farther isn't enough. I also want to keep nearby words working together.
+Now here's the staged, local part.
+
+The first two layers use just those two sources.
+From layer three onward, I also keep the two nearest words on the left.
+So each word looks at four sources: itself, its two left neighbors, and one long-distance source.
+
+The nearby connections stay nearby. The long jump keeps doubling.
+I keep a small local route to organize the words, while the binary route spreads information farther and farther.
+
+And I'm still using attention to choose how much information to take from each source.
+The connections are fixed. Their weights are learned.
+
+So I'm not replacing attention with a plain average.
+I'm giving it a much smaller, more organized set of choices.
+
+With the binary scaffold alone, the reachable range can double with each layer.
+Two positions, four, eight, sixteen...
+Ten layers can cover 1024 positions. Twenty can cover about a million.
+All without asking each position to directly compare itself with a million others.
+
+And the rule is the same at every position in a layer.
+No searching for neighbors. No sorting words into groups.
+Just fixed offsets, which I can calculate directly.
+
+
+That's the idea: a few regular connections, a rapidly expanding reach, and a small local route to keep the information organized.
+The local route keeps nearby information organized. The long-distance route keeps expanding.
+
+In short, it's a diffusion step along the time axis.
+
+---
+
+So, in theory, the longer the context, the bigger the savings.
+Let's compare my architecture with dense attention, using the same number of layers in both.
+At 1K, with ten layers, that's about 150 times fewer attention connections.
+At 8K, with thirteen layers, it's already over a thousand times fewer.
+And at 1M, with twenty layers? About 140,000 times fewer.
+That's over 99.999 percent of the pairwise attention computation gone.
+
+Now, say those attention interactions account for 40 to 60 percent of the model's total computation.
+Then, on paper, I could cut roughly 40 to 60 percent of the total computation at 1M.
+Not just the attention part. The whole model.
+That's incredible!
+
+---
+
+But when I tried to turn that theory into code,
+things started going wrong.
+
+I started with plain PyTorch: gather the selected words, compute the scores, apply softmax, and combine the values.
+Simple enough. But each little operation comes with its own overhead.
+I had removed most of the math, not most of the time.
+
+So I tried the built-in attention operator, SDPA.
+Then I wrote fused Triton kernels, combining those operations so the GPU wouldn't have to keep starting another tiny job.
+
+And I kept pushing the CUDA execution: process several positions together, keep intermediate results inside the kernel, and reorganize the backward pass to avoid competing gradient writes.
+With grouped-query attention, I also stopped copying the same keys and values across multiple heads.
+
+All that, just to make the GPU do less work by doing less work.
+Apparently, that needed explaining.
+
+Kernel launch overhead and data movement were eating into the savings.
+The calculation was tiny. The cost of getting it started wasn't.
+
+---
+
+But wait. Would that overhead still matter as much with a longer context?
+
+I moved the test to an RTX 4090 with 48 gigabytes of VRAM.
+And yes, I checked the competition.
+The standard causal attention was already using a fused FlashAttention kernel.
+My version used fused Triton kernels.
+Both ran the same eight-layer model, with batch size one.
+
+At 4K, my version was actually a little slower.
+At 16K, they were about even.
+At 64K, mine was over five times faster.
+And at one million positions?
+
+Standard attention: about 64,000 tokens per second.
+Mine: about 3.57 million.
+
+That's nearly 56 times faster.
+Okay. Now the GPU is finally noticing all that missing math.
+
+But this was forward only: no backward pass, no optimizer, and no vocabulary output layer.
+And the model had only eight layers, so my binary route couldn't connect the entire million-position window yet.
+This test measured speed. It didn't prove that the model could use all that context.
+
+---
+
+So I tried actual training on WikiText-2.
+
+First, a quick one-million-position test: three passes, with a tiny four-layer model.
+Standard attention took about thirteen and a half minutes.
+Mine took about twelve seconds, including kernel compilation.
+Around 66 times faster overall.
+
+Sounds ridiculous. But again, four layers don't cover a million positions.
+So I needed a test where the route could actually reach across the whole window.
+
+I used 65,536 positions and sixteen attention layers.
+Same model width, same parameter count, same training data, same twenty passes.
+I also kept WikiText's validation split separate.
+
+Standard attention finished in about 26 minutes.
+Mine finished in under five.
+About 5.5 times faster, for the complete training run.
+
+And the loss?
+Training cross-entropy went from 2.32 with standard attention to 1.33 with mine.
+On held-out validation text, it went from 2.30 to 1.37.
+Lower is better.
+
+So in this run, I got faster training and lower loss.
+This is still a small character-level model and one random seed.
+But it's a result worth following up on.
+
+The memory numbers were almost identical: about 5.1 gigabytes each.
+FlashAttention already avoids storing that giant square attention matrix.
+And the rest of the model still needs memory in both versions.
+Fewer connections saved computation here, without making the whole model dramatically smaller in memory.
+
+---
+
+
+So let me get this straight.
+We spend thousands of dollars on a GPU,
+then ask it to calculate a mountain of connections that a much smaller graph might replace.
+
+At one million positions, my graph uses about 0.0007 percent of the attention connections.
+Roughly one in 140,000.
+That's the size of the cut on paper.
+Put it another way: if I'm paying for 140,000 times as many connections,
+I'd like to see those connections earn their keep.
+Where's the spectacular improvement to match that spectacular amount of work?
+Looking at the loss, I don't see it.
+In the deeper training test, the sparse version even came out ahead.
+
+So how much of today's AI industry's computing bill comes from historical baggage?
+Architectures we keep using because the hardware is good at running them,
+and hardware we keep building because those are the architectures everyone uses.
+
+Imagine a GPU looking very busy,
+while a huge chunk of its work is calculating dense connections we might not need.
+Then I remove those calculations, and it spends more of its time waiting for data or the next kernel launch.
+Great. I've given my expensive GPU less work, and somehow more time off.
+
+So here are a few interesting questions.
+Maybe some evil little details make this overhead unavoidable.
+Or a different hardware architecture could just solve the problem.
+
+And I might look into this in future videos,
+including AI hardware design, but also anything else about AI.
+And that's another big rabbit hole.
+
+---
+If you're interested in these questions, 
+please hit that like button and subscribe.
+Drop a comment and share the video.
+You can also follow the link below to join our community.
+
+Let me know how interested you are.
+
+I'll see you next time.
+
+
+---
+As for originality, I haven't found an existing proposal that matches this exact idea as of publication.
+If you know of one, please tell me.
+
+This video focuses on the fun of exploring an idea, and I made it on a tight schedule.
+The aim is to get people thinking and show the process, rather than deliver the final word on the subject.
+If you have a different take or something to add, leave a comment.
+That can help me develop the idea further.
