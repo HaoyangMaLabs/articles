@@ -2,7 +2,7 @@
 title: "How Binary Jumps and Local Connections Can Make Attention Faster"
 date: 2026-10-10
 lastmod: 2026-10-12
-draft: true
+draft: false
 author: "HaoyangMa"
 description: "A popular-science introduction to sparse attention, binary information propagation, book and code experiments, and the gap between theoretical savings and GPU speed."
 tags:
