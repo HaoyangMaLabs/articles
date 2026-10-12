@@ -128,9 +128,9 @@ At 8K, with thirteen layers, it's already over a thousand times fewer.
 And at 1M, with twenty layers? About 140,000 times fewer.
 That's over 99.999 percent of the pairwise attention computation gone.
 
-Now, say those attention interactions account for 40 to 60 percent of the model's total computation.
-Then, on paper, I could cut roughly 40 to 60 percent of the total computation at 1M.
-Not just the attention part. The whole model.
+But that's the attention interactions, not the whole model.
+The FFNs, projections, and normalization still have work to do.
+Those costs don't disappear when I remove connections.
 That's incredible!
 
 ---
@@ -158,60 +158,56 @@ The calculation was tiny. The cost of getting it started wasn't.
 
 But wait. Would that overhead still matter as much with a longer context?
 
-I moved the test to an RTX 4090 with 48 gigabytes of VRAM.
+I ran the speed test on an RTX 4090 with 24 gigabytes of VRAM.
 And yes, I checked the competition.
 The standard causal attention was already using a fused FlashAttention kernel.
 My version used fused Triton kernels.
-Both ran the same eight-layer model, with batch size one.
+Both used twenty layers, batch size one, and one million positions.
 
-At 4K, my version was actually a little slower.
-At 16K, they were about even.
-At 64K, mine was over five times faster.
-And at one million positions?
+First, just the attention interactions: scoring the connections, applying softmax, and mixing the values.
+Across all twenty layers, the measured GPU kernel time was about 40.9 seconds for standard attention.
+Mine? About 86 milliseconds.
+That's about 477 times faster for the attention interactions alone.
+No QKV projections. No output projections. No FFNs.
 
-Standard attention: about 64,000 tokens per second.
-Mine: about 3.57 million.
+So, about 140,000 times fewer connections, but about 477 times faster attention.
+The GPU is noticing the missing math. Just not at the same scale.
 
-That's nearly 56 times faster.
-Okay. Now the GPU is finally noticing all that missing math.
+Now include the FFNs, projections, normalization, and the rest of the model backbone.
+Standard: about 41.5 seconds. Mine: about 0.74 seconds.
+That's about 56 times faster overall.
+Those unchanged costs don't vanish. They become a much bigger part of the bill.
 
 But this was forward only: no backward pass, no optimizer, and no vocabulary output layer.
-And the model had only eight layers, so my binary route couldn't connect the entire million-position window yet.
+Twenty layers provide a route across the full million-position window.
 This test measured speed. It didn't prove that the model could use all that context.
 
 ---
 
-So I tried actual training on WikiText-2.
+But speed is one question. Prediction quality is another.
+So I trained both versions on a small, fixed subset of PG-19: actual long books.
+Thirty books for training, five for validation, and five for testing, taken from the dataset's separate splits.
+No joining unrelated books to make a longer sample.
 
-First, a quick one-million-position test: three passes, with a tiny four-layer model.
-Standard attention took about thirteen and a half minutes.
-Mine took about twelve seconds, including kernel compilation.
-Around 66 times faster overall.
-
-Sounds ridiculous. But again, four layers don't cover a million positions.
-So I needed a test where the route could actually reach across the whole window.
-
-I used 65,536 positions and sixteen attention layers.
-Same model width, same parameter count, same training data, same twenty passes.
-I also kept WikiText's validation split separate.
-
-Standard attention finished in about 26 minutes.
-Mine finished in under five.
-About 5.5 times faster, for the complete training run.
+I used windows of up to 32,768 characters and fifteen attention layers, enough to cover each window.
+Short books and the last partial window stayed in the data too.
+Same model width, same parameter count—about 629,000 each—and the same twenty passes.
+And I repeated the comparison with three random seeds.
+For each run, I picked the checkpoint with the lowest validation loss, then measured it on the test books.
 
 And the loss?
-Training cross-entropy went from 2.32 with standard attention to 1.33 with mine.
-On held-out validation text, it went from 2.30 to 1.37.
+On average, training cross-entropy was 1.44 with standard attention and 1.31 with mine.
+On the held-out test books, it was 1.56 versus 1.43.
 Lower is better.
 
-So in this run, I got faster training and lower loss.
-This is still a small character-level model and one random seed.
-But it's a result worth following up on.
+Next-character accuracy on the test books? About 53.76 percent versus 57.68 percent.
+That's almost four percentage points higher.
+And the sparse version won with all three seeds.
 
-The memory numbers were almost identical: about 5.1 gigabytes each.
-FlashAttention already avoids storing that giant square attention matrix.
-And the rest of the model still needs memory in both versions.
-Fewer connections saved computation here, without making the whole model dramatically smaller in memory.
+So under the same training budget, fewer connections didn't hurt the result here. They helped.
+These are still small character-level models, and the standard version was still improving.
+This isn't a claim that both models have reached their limits.
+But it's a result worth following up on.
 
 ---
 
@@ -227,20 +223,37 @@ Put it another way: if I'm paying for 140,000 times as many connections,
 I'd like to see those connections earn their keep.
 Where's the spectacular improvement to match that spectacular amount of work?
 Looking at the loss, I don't see it.
-In the deeper training test, the sparse version even came out ahead.
+In the PG-19 training test, the sparse version even came out ahead with all three seeds.
 
-So how much of today's AI industry's computing bill comes from historical baggage?
-Architectures we keep using because the hardware is good at running them,
-and hardware we keep building because those are the architectures everyone uses.
+But this architecture has problems too.
+Those results were on natural language. When I switched to code, the gap went the other way. And it wasn't small.
 
-Imagine a GPU looking very busy,
-while a huge chunk of its work is calculating dense connections we might not need.
-Then I remove those calculations, and it spends more of its time waiting for data or the next kernel launch.
-Great. I've given my expensive GPU less work, and somehow more time off.
+I used a Python subset of The Stack Smol, with separate repositories for training, validation, and testing.
+Same fifteen layers, about 693,000 parameters each, twenty passes, and three random seeds.
+Average training loss: 0.77 for standard attention, 1.23 for mine.
+Test loss: 0.84 versus 1.43.
+And test accuracy? About 78 percent for standard attention, but only 62 percent for mine.
+Sixteen percentage points lower. All three seeds told the same story.
+
+So this wasn't just a problem with unseen code. Mine was worse at fitting the training code too.
+Maybe code needs more direct, precise connections: which variable, which bracket, which function?
+Passing that information through several other positions might blur it along the way.
+That's a possible explanation, not something I've proved yet.
+
+Training loss was still slowly falling at twenty passes, so this isn't the final limit either.
+But the lesson is clear: fewer connections worked well on these books. That doesn't mean they work just as well on code.
+
+But stepping back, this still tells me something.
+At least for some tasks, a lot of those dense connections are unnecessary.
+Yet today's GPUs, and the whole AI ecosystem around them, are still built around dense computation.
+The hardware, the software, the optimization tricks—all really good at doing more dense math.
+Not so friendly when I ask them to do less, sparse work instead.
+That's the frustrating part: removing the work doesn't automatically remove the cost.
 
 So here are a few interesting questions.
-Maybe some evil little details make this overhead unavoidable.
-Or a different hardware architecture could just solve the problem.
+Where exactly can I cut connections, and what decides that?
+Why doesn't less computation automatically mean more speed?
+Could a whole new hardware architecture unlock the power of sparsity?
 
 And I might look into this in future videos,
 including AI hardware design, but also anything else about AI.
@@ -251,8 +264,6 @@ If you're interested in these questions,
 please hit that like button and subscribe.
 Drop a comment and share the video.
 You can also follow the link below to join our community.
-
-Let me know how interested you are.
 
 I'll see you next time.
 
