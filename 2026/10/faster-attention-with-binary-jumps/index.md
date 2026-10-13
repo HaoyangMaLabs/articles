@@ -11,11 +11,11 @@ tags:
   - popular science
 ---
 
-As we all know, an attention block in a neural network lets us combine one word with other related words. For example, in "I love machine learning", the word "learning" can pay attention to "machine", and use that information to understand what kind of learning we mean. That is quite simple and powerful.
+As we all know, an attention block in a neural network combines information from one word with information from other words. For example, in "I love machine learning", the word "learning" can pay attention to "machine" to understand what "learning" means here. That's quite simple and powerful.
 
-And this pattern has been around for nearly 10 years. So the question today is: can we accelerate it? With some kind of mathematical trick?
+And this pattern has been around for nearly 10 years. So the question today is: can we speed it up? With some kind of mathematical trick?
 
-The answer is Yes.
+Of course we can.
 
 ## Attention as information transport
 
