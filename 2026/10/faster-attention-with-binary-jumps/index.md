@@ -2,13 +2,11 @@
 title: "How Binary Jumps and Local Connections Can Make Attention Faster"
 date: 2026-10-10
 lastmod: 2026-10-12
-draft: false
 author: "HaoyangMa"
 description: "A popular-science introduction to sparse attention, binary information propagation, book and code experiments, and the gap between theoretical savings and GPU speed."
-tags:
-  - AI
-  - attention
-  - popular science
+tags: ["AI", "Attention", "Popular Science"]
+categories: ["Research"]
+draft: false
 ---
 
 As we all know, an attention block in a neural network combines information from one word with information from other words. For example, in "I love machine learning", the word "learning" can pay attention to "machine" to understand what "learning" means here. That's quite simple and powerful.

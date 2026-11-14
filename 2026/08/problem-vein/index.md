@@ -1,10 +1,11 @@
 ---
 title: "Problem-Vein"
+slug: "problem-vein"
 date: 2026-08-25
+author: "HaoyangMa"
 description: "Why Opportunities Run Out—and What That Means for Work"
 tags: ["Economics", "Work", "Technology"]
 categories: ["Essays"]
-slug: "problem-vein"
 featured: true
 draft: false
 ---
@@ -40,5 +41,3 @@ When opportunities begin to shrink, the relevant question changes: how much valu
 Or perhaps the better question is: under current conditions, how much value can humans actually extract from this mine? Once the vein itself is overlooked, everything starts to look like a problem with the miners.
 
 So, it’s time to find a new vein.
-
-Copyright © 2026 HaoyangMa. All rights reserved. You are welcome to link to this original article. Please do not reproduce, mirror, translate, or adapt it without permission.

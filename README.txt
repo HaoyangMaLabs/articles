@@ -36,6 +36,26 @@ Publishing workflow
 The website repository includes this repository at content/posts/ as a Git
 submodule, so Hugo reads these files directly during the build.
 
+Commit identity
+---------------
+
+Commits to this repository use the dedicated author identity:
+
+    HaoyangMa <haoyang@haoyangma.com>
+
+Configure it locally (together with the dedicated SSH key) with:
+
+    git config user.name "HaoyangMa"
+    git config user.email "haoyang@haoyangma.com"
+    git config core.sshCommand "ssh -i ~/.ssh/id_ed25519_github_second -o IdentitiesOnly=yes"
+
+Copyright notices
+-----------------
+
+Do not put copyright notices in article bodies. The website template adds a
+uniform copyright block at the end of every article. Use the optional
+front matter field `copyright:` only when an article needs different terms.
+
 License
 -------
 
