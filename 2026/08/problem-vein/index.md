@@ -16,7 +16,7 @@ We don't usually think this way about things outside our control. No one blames 
 
 ---
 
-Consider a newly discovered gold field. It has happened many times, in many places, and it tends to unfold the same way.
+Consider any gold rush. They all unfold the same way.
 
 In the early days, gold lies close to the surface and is easy to dig up. You can even pick gold grains out of the riverbed silt with a simple pan.
 
