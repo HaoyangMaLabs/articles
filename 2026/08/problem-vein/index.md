@@ -16,13 +16,13 @@ We don't usually think this way about things outside our control. No one blames 
 
 ---
 
-Consider the California Gold Rush.
+Consider a newly discovered gold field. It has happened many times, in many places, and it tends to unfold the same way.
 
-In 1848, gold was discovered at Sutter's Mill in California. A lot of people went there to dig for gold. In the early days, gold was close to the surface and easy to dig up. You could even find gold grains in the riverbed silt.
+In the early days, gold lies close to the surface and is easy to dig up. You can even pick gold grains out of the riverbed silt with a simple pan.
 
-But as more people came, the easy gold became harder to find. Those who came later had to dig deeper. They needed more time, more money, and more equipment. Gold mining had relied on simple individual tools, but now it began to require capital, with methods like hydraulic and underground mining.
+But as more people arrive, the easy gold disappears. Those who come later have to dig deeper. They need more time, more money, and more equipment. What began with simple individual tools ends up requiring capital, with methods like hydraulic and underground mining.
 
-This way of thinking puts all the attention on personal ability and personal choices, but misses a more fundamental variable: the amount of gold in the mine is not infinite. The longer people dig, the less gold is left, until digging for more gold simply isn't worth it anymore. So if we look at the timeline, the same person with the same skills can enter the same gold mine at different times and get very different returns.
+The usual explanation puts all the attention on personal ability and personal choices, but misses a more fundamental variable: the amount of gold in the mine is not infinite. The longer people dig, the less gold is left, until digging for more gold simply isn't worth it anymore. So if we look at the timeline, the same person with the same skills can enter the same gold mine at different times and get very different returns.
 
 The formula becomes:
 
