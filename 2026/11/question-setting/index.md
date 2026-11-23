@@ -27,7 +27,7 @@ draft: false
 
 那么，问题来了。如果连这样的智力活动，也正在被机器一步步改写，人类的护城河，究竟在哪里？
 
-尤其是，如果你读过我上一篇对“学习时间倒挂”现象的讨论（[学得越慢，学得越快]({{< ref "../learn-slower-learn-faster/index.md" >}})），你可能会产生一个更加直接的疑问：
+尤其是，如果你读过我上一篇《学得越慢，学得越快》对“学习时间倒挂”现象的讨论，你可能会产生一个更加直接的疑问：
 
 > **AI 时代，我们究竟还应该学些什么？**
 
@@ -161,5 +161,3 @@ draft: false
 - Donald A. Schön, *The Reflective Practitioner: How Professionals Think in Action*, Basic Books, 1983.
 - James G. March, "Exploration and Exploitation in Organizational Learning," *Organization Science* 2(1), 1991.
 - Lean FRO & Mathlib Initiative, "[Lean verification of the Riemann Hypothesis](https://leanprover-community.github.io/blog/posts/riemann-hypothesis/)," 2026-11-21.
-
-前篇：[学得越慢，学得越快]({{< ref "../learn-slower-learn-faster/index.md" >}})
