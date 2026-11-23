@@ -6,7 +6,7 @@ author: "HaoyangMa"
 description: "AI 时代的学习悖论：当技术迭代快过人的学习速度，越早投入的人，反而可能付出越高的代价。"
 tags: ["AI", "Learning", "Economics"]
 categories: ["Essays"]
-draft: false
+draft: true
 ---
 
 如果你在 2022 年还没学会画画，那么恭喜你，你可能永远也不需要学会画画了。因为这一年，各类绘画 AI 模型横空出世，只需输入几句话，就能生成精美的图像。
