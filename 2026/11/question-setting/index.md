@@ -1,17 +1,40 @@
 ---
 title: "为什么人人都该成为哥德巴赫"
+seoTitle: "AI 证明黎曼猜想之后，人类还该学什么？为什么人人都该成为哥德巴赫"
 slug: "question-setting"
 date: 2026-11-22
+lastmod: 2026-11-23
 author: "HaoyangMa"
-description: "当 AI 开始进入数学证明，解题不再稀缺。AI 时代真正被低估的，是出题能力：发现问题、提出问题、探索未知的能力。"
-tags: ["AI", "Learning", "Mathematics"]
+lang: "zh-CN"
+cover: "images/power-loom-1835.jpg"
+description: "Claude 参与的黎曼猜想证明通过 Lean 核验，AI 开始进入数学证明，解题不再稀缺。AI 时代该学什么、如何不被淘汰？答案是出题能力：发现问题、提出问题、探索未知的能力。"
+tags: ["AI", "Learning", "Mathematics", "黎曼猜想", "AI时代学什么", "出题能力"]
+keywords: ["黎曼猜想", "黎曼猜想被证明了吗", "Claude 黎曼猜想", "Levent Alpöge", "Lean 形式化证明", "AI时代学什么", "AI时代如何不被淘汰", "提问能力", "出题能力", "哥德巴赫猜想", "问题设定", "探索与利用", "AI 数学证明"]
+about: ["黎曼猜想", "哥德巴赫猜想", "人工智能与教育", "提问能力"]
 categories: ["Essays"]
-draft: false
+youtube: "Kja-qhuseVI"
+videoTitle: "AI证明黎曼猜想，我们还能做什么？如何才能不被淘汰？| 为什么人人都该成为哥德巴赫"
+faqTitle: "常见问题"
+faq:
+  - q: "黎曼猜想被证明了吗？"
+    a: "2026 年 11 月 20 日，Anthropic 数学家 Levent Alpöge 发布了约 1700 万行代码的 Lean 形式化证明，并在个人声明中表示这是他与 Claude 合作的成果；11 月 21 日，Lean FRO 与 Mathlib Initiative 发表联合声明，表示对证明的正确性有充分信心。但截至 2026 年 11 月 23 日，克雷数学研究所仍将黎曼猜想列为未解决问题，数学界的人工审阅仍在进行中，因此更准确的说法是：它已通过机器核验，尚未被数学界普遍接受。"
+  - q: "AI 时代我们还应该学什么？"
+    a: "本文的答案是出题能力，也就是发现问题、提出问题、探索未知的能力。当 AI 让解题能力不再稀缺，决定什么问题值得解决，就成了更稀缺、也更难被替代的能力。"
+  - q: "什么是出题能力？它和解题能力有什么不同？"
+    a: "解题是在已知目标下寻找方法；出题是决定什么值得成为目标。哥德巴赫在 1742 年提出了一个猜想，欧拉和此后 280 多年的数学家都在尝试解决它，前者就是出题，后者是解题。"
+  - q: "舍恩的“问题设定”是什么意思？"
+    a: "唐纳德·舍恩在 1983 年的《反思性实践者》中指出，我们过于强调问题解决（problem solving），而忽视了问题设定（problem setting）：在真实世界里，从复杂而模糊的处境中界定什么才是值得解决的问题。"
+  - q: "马奇的“探索与利用”是什么？"
+    a: "詹姆斯·马奇在 1991 年的论文中区分了利用（exploitation，用已有知识提高效率）和探索（exploration，寻找新的可能）。利用的回报更确定、更快，探索的回报更不确定、更慢，因此越成功的系统越容易只做利用，被自己的成功困住。"
+  - q: "AI 时代如何才能不被淘汰？"
+    a: "不要只把精力放在比 AI 更快更准地解题上，而要训练提出好问题的能力：多追问一件事为什么值得做，在已知之外寻找新的方向，把 AI 当作解题工具，自己负责定义问题和判断答案。"
 ---
 
 > ▶ **视频版已在 YouTube 发布：[AI 证明黎曼猜想，我们还能做什么？| 为什么人人都该成为哥德巴赫](https://youtu.be/Kja-qhuseVI)**
 
 {{< youtube Kja-qhuseVI >}}
+
+> **要点：**2026 年 11 月，一份由 Anthropic 数学家 Levent Alpöge 与 Claude 合作完成的黎曼猜想证明通过了 Lean 形式化核验。当 AI 开始进入数学证明，解题能力不再稀缺。本文从哥德巴赫 1742 年的一封信出发，借舍恩的“问题设定”与马奇的“探索与利用”，回答 AI 时代该学什么：**出题能力**，也就是发现问题、提出问题、探索未知的能力。
 
 如果你生活在 1830 年的英国，恰好是一名织布工匠，那么，你可能很快就不用亲手织布了。因为蒸汽动力织布机，正在逐渐取代手工织布。
 
@@ -21,11 +44,13 @@ draft: false
 
 {{< figure src="images/naca-computers.jpg" alt="NACA 的人工计算员在工作" caption="NACA（NASA 前身）的人工计算员。那时，computer 指的是人。（NASA，公有领域）" >}}
 
-而如果你生活在 2026 年 11 月，恰好是一名数学家，或者数学专业的学生，但还没来得及证明黎曼猜想，那么，就在 11 月 20 日，数学家 Levent Alpöge 发布了这个困扰数学界 167 年的难题的证明：一个约 1700 万行代码的 Lean 形式化证明库。紧接着第二天，Lean FRO 与 Mathlib Initiative 发表联合声明，表示对这份证明的正确性有充分信心。
+而如果你生活在 2026 年 11 月，恰好是一名数学家，或者数学专业的学生，但还没来得及证明黎曼猜想，那么，就在 11 月 20 日，Anthropic 的数学家 Levent Alpöge 发表声明，称他与 Claude 合作，找到了这个困扰数学界 167 年的难题的证明：一个约 1700 万行代码的 Lean 形式化证明库。紧接着第二天，Lean FRO 与 Mathlib Initiative 发表联合声明，表示对这份证明的正确性有充分信心。
 
-这无疑是一个极具历史意义的时刻。一份 1700 万行的证明，很难有人逐行读完；它的正确性，是由机器逐行检查的。人类长期以来引以为傲的、高度抽象的智力活动，数学证明，正在以一种全新的方式被生产和检验。
+这无疑是一个极具历史意义的时刻。一份 1700 万行的证明，很难有人逐行读完；它的正确性，是由机器逐行检查的。这一次，AI 触及的是人类长期以来引以为傲的、高度抽象的智力活动：数学证明。
 
-那么，问题来了。如果连这样的智力活动，也正在被机器一步步改写，人类的护城河，究竟在哪里？
+当然，严格来说，这个证明还在等待数学界的人工审阅，克雷数学研究所目前也仍把黎曼猜想列为未解决问题。但无论最终结论如何，数学证明正在以一种全新的方式被生产和检验，这一点已经发生了。
+
+那么，问题来了。如果连这样的智力活动，AI 都开始能够胜任，人类的护城河，究竟在哪里？
 
 尤其是，如果你读过我上一篇《学得越慢，学得越快》对“学习时间倒挂”现象的讨论，你可能会产生一个更加直接的疑问：
 
@@ -133,9 +158,9 @@ draft: false
 
 过去，非常擅长解题的人，是稀缺资源。复杂的计算，需要长期训练；困难的程序，需要深厚的专业能力；高水平的数学证明，更是只有极少数人才能完成。正因为这些能力稀缺，我们才赋予了它们极高的价值。
 
-但 AI 正在迅速改变这种稀缺性。今天，它能够帮助我们写程序、分析数据、推导公式，甚至参与数学研究。而 2026 年 11 月 20 日发布的黎曼猜想证明，一份需要由机器来核验的形式化证明，把这种变化推向了一个极具象征意义的时刻。
+但 AI 正在迅速改变这种稀缺性。今天，它能够帮助我们写程序、分析数据、推导公式，甚至参与数学研究。而 2026 年 11 月 20 日的黎曼猜想事件，把这种变化推向了一个极具象征意义的时刻。
 
-在过去，数学能力最顶尖的一批人，可能需要花费整个职业生涯去尝试解决一个重要问题。而现在，一个困扰数学界 167 年的难题，以约 1700 万行代码的形式化证明出现，第二天就由 Lean FRO 与 Mathlib Initiative 公开确认。我们正在亲眼见证，曾经极其稀缺的高水平解题能力，开始拥有一种全新的生产方式。
+在过去，数学能力最顶尖的一批人，可能需要花费整个职业生涯去尝试解决一个重要问题。而现在，一位数学家与 AI 合作，公布了一份约 1700 万行代码的形式化证明，第二天就由 Lean FRO 与 Mathlib Initiative 公开确认。我们正在亲眼见证，曾经极其稀缺的高水平解题能力，开始拥有一种全新的生产方式。
 
 这意味着什么？**人类几百年来对解题能力的崇拜，正在遭遇前所未有的挑战。**
 
@@ -160,4 +185,6 @@ draft: false
 - David Hilbert, "Mathematische Probleme," 1900.
 - Donald A. Schön, *The Reflective Practitioner: How Professionals Think in Action*, Basic Books, 1983.
 - James G. March, "Exploration and Exploitation in Organizational Learning," *Organization Science* 2(1), 1991.
+- Technology.org, "[Lean Community Certifies Levent Alpöge’s Claude-Assisted Proof of the Riemann Hypothesis](https://www.technology.org/2026/11/23/riemann-hypothesis-proof-lean-certified-alpoge-claude/)," 2026-11-23.
+- Clay Mathematics Institute, "[The Riemann Hypothesis](https://www.claymath.org/millennium/riemann-hypothesis/)," Millennium Prize Problems.
 - Lean FRO & Mathlib Initiative, "[Lean verification of the Riemann Hypothesis](https://leanprover-community.github.io/blog/posts/riemann-hypothesis/)," 2026-11-21.
